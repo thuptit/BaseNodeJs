@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "0461a3dd-1ad9-4c59-b99c-be603d1ff330",
+		"name": "Training Nodejs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123456\",\n    \"displayName\": \"long\",\n    \"phoneNumber\": \"+84374539630\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/v1/users",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "endpoint",
+			"value": "http://localhost:3000"
+		}
+	]
+}

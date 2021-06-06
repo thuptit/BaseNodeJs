@@ -1,0 +1,400 @@
+{
+	"info": {
+		"_postman_id": "30ef093f-a255-4db9-90ab-227d3c7d1c74",
+		"name": "Express API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "/register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ea005fd2-b5d6-413f-9235-c5f969605ebc",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"huynhdn@gmail.com\",\n    \"password\": \"123456\",\n    \"displayName\": \"tinh\",\n    \"phoneNumber\": \"+84374539630\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								},
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/v1/auth/register",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e060d31c-14de-4ddc-becc-338239034f77",
+								"exec": [
+									"pm.environment.set(\"access_token\", pm.response.json().accessToken);",
+									"pm.environment.set(\"refresh_token\", pm.response.json().refreshToken);",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"huynhdn@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								},
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/v1/auth/login",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "74d7093c-ee27-4323-bb48-9ebb8dbc7e5b",
+								"exec": [
+									"pm.environment.set(\"access_token\", pm.response.json().accessToken);",
+									"pm.environment.set(\"refresh_token\", pm.response.json().refreshToken);",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refresh_token}}\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/v1/auth/refresh-token",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2973d1e2-2f5f-49d5-96d0-4d4d9a5be49a",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/v1/auth/verification",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"verification"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bc3f199a-c35f-4052-9931-e09bbaa3004e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6a29b84c-2826-46c7-913f-3ff569564df6",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "/users/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8856e334-6db1-4036-9a85-24ddd4c1399e",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "udid",
+								"value": "00000023-DHAKVINAVDV",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{endpoint}}/v1/users/profile",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "011974ae-9eeb-4422-bb1d-aa81d2510186",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "{{access_token}}"
+							},
+							{
+								"key": "udid",
+								"value": "00000023-DHAKVINAVDV",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"thucleit99@gmail.com\",\n    \"displayName\": \"Le Trung Thuc\",\n    \"phoneNumber\": \"+84344742282\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								},
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/v1/users/profile",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/password-reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "15613acc-5efd-49e4-b552-efadbc553fdf",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.response.to.be.json;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"12345678\",\n    \"passwordConfirmation\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								},
+								"urlencoded": {}
+							}
+						},
+						"url": {
+							"raw": "{{endpoint}}/v1/users/password-reset",
+							"host": [
+								"{{endpoint}}"
+							],
+							"path": [
+								"v1",
+								"users",
+								"password-reset"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "6efe3435-dae2-493f-8102-f19e04507e0e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "45eb91ce-e427-4e34-b696-5cab50951083",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "137d2052-5527-48d6-a2c6-eb837d729948",
+			"key": "endpoint",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

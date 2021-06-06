@@ -1,0 +1,491 @@
+openapi: 3.0.0
+info:
+  title: api
+  description: This is the backend APIs
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:3000/v1
+    description: Localhost enviroment
+  - url: http://localhost:3000/v1
+    description: Production enviroment
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: string
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - statusCode
+        - error
+        - message
+  responses:
+    BadRequestException:
+      description: Inputs is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            statusCode: 400
+            error: "invalid"
+            message: ""
+    UnauthorizedException:
+      description: Authentication is missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            statusCode: 401
+            error: "unauthorization"
+            message: ""
+    ForbiddenException:
+      description: Do not have permission
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            statusCode: 403
+            error: "Forbidden"
+            message: "Forbidden resource"
+    NotFoundException:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            statusCode: 404
+            error: "not found"
+            message: ""
+    InternalServerErrorException:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            statusCode: 500
+            error: "internal server error"
+            message: ""
+paths:
+  /v1/auth/register:
+    post:
+      tags:
+        - v1
+        - authentication
+      summary: register 
+      description: register new user
+      requestBody: 
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                password:
+                  type: string
+                displayName: 
+                  type: string
+                phoneNumber:
+                  type: string
+              required:
+                - email
+                - password
+                - displayName
+                - phoneNumber
+      security:
+        - Bearer: []
+      responses:
+        "201":
+          description: register successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uid:
+                    type: string
+                required:
+                  - uid
+                example:
+                  uid: jReMpDiRj7YV2tLuZ02nw41liSm1
+        "500":
+          description: The email address is already in use by another account.    
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"                  
+                    
+  /v1/auth/login:
+    post:
+      tags:
+        - v1
+        - authentication
+      summary: login
+      description: login using IBM cloud AppID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    description: accessToken.
+                    type: string
+                  refreshToken:
+                    description: refreshToken.
+                    type: string
+                  expiresIn:
+                    description: expires period.
+                    type: string
+                required:
+                  - accessToken
+                  - refreshToken
+                  - expiresIn
+                  - role
+                example:
+                  accessToken: "xxx"
+                  refreshToken: "xxx"
+                  expiresIn: 3600
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"
+  /v1/auth/verification:
+    post:
+      tags:
+        - v1
+        - authentication
+      summary: verify email
+      description: verify email and rerturn sth
+      responses: 
+        "201":
+          description: verify sucessfull 
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"   
+
+  /v1/auth/refresh-token:
+    post:
+      tags:
+        - v1
+        - authentication
+      summary: refresh authentication token
+      description: Refresh authentication token. Return new authentication token and refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+              required:
+                - refreshToken
+      security:
+        - Bearer: []
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    description: accessToken.
+                    type: string
+                  refreshToken:
+                    description: refreshToken.
+                    type: string
+                  expiresIn:
+                    description: expires period.
+                    type: string
+                required:
+                  - accessToken
+                  - refreshToken
+                  - expiresIn
+                  - role
+                example:
+                  accessToken: "xxx"
+                  refreshToken: "xxx"
+                  expiresIn: 3600
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"       
+
+  /v1/user/profile:
+    get:
+      tags:
+        - v1
+        - user
+      summary: get client profile
+      description: return client profile
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    description: cloud directory user id.
+                    type: string
+                  name:
+                    description: display name.
+                    type: string
+                  active:
+                    description: status of user.
+                    type: boolean
+                  email:
+                    description: email (username).
+                    type: string
+                  role:
+                    description: role of user.
+                    type: string
+                    enum:
+                      - BANK_TELLER
+                      - BANK_MANAGER
+                  created:
+                    description: created time.
+                    type: number
+                  updated:
+                    description: updated time.
+                    type: number
+                required:
+                  - id
+                  - name
+                  - active
+                  - email
+                  - role
+                  - created
+                  - updated
+                example:
+                  id: "2811a601-2c3d-4584-aa02-23d737a1d853"
+                  name: "huynhdn"
+                  active: true,
+                  email: huynhdn@hybrid-technologies.vn
+                  role: BANK_TELLER
+                  created: 1572234987060
+                  updated: 1577090370004
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"  
+
+    put:
+      tags:
+        - v1
+        - user
+      summary: update infomation user
+      description: Change information user. Return infomation after update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                displayName: 
+                  type: string
+                phoneNumber:
+                  type: string
+                email:
+                  type: string
+              required:
+                - displayName
+                - phoneNumber
+                - email
+      responses: 
+        "200":
+          description: Update succesful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: name of user
+                  iss:
+                    type: string
+                  aud:
+                    type: string
+                  auth_time:
+                    type: integer
+                  user_id:
+                    type: string
+                  sub:
+                    type: string
+                  iat:
+                    type: integer
+                  exp:
+                    type: integer
+                  email:
+                    type: string
+                  email_verified:
+                    type: boolean
+                  firebase:
+                    type: object
+                    properties:
+                      identities:
+                        type: object
+                        properties:
+                          email:
+                            type: object
+                      sign_in_provider:
+                        type: string
+                  uid: 
+                    type: string
+                required:
+                  - name
+                  - iss
+                  - aud
+                  - auth_time
+                  - user_id
+                  - sub
+                  - iat
+                  - exp
+                  - email
+                  - email_verified
+                  - firebase
+                  - identities
+                  - emai
+                  - uid
+                example:              
+                  "user": 
+                      name: "tinh"
+                      iss: "https://securetoken.google.com/chatapp-5611e"
+                      aud: "chatapp-5611e"
+                      auth_time: 1594115941,
+                      user_id: "d2KV9v4hrjMWahiX9I3MS4AviD43"
+                      sub: "d2KV9v4hrjMWahiX9I3MS4AviD43"
+                      iat: 1594115941
+                      exp: 1594119541
+                      email: "longpeo123@gmail.com"
+                      email_verified: false
+                      firebase: 
+                          identities: 
+                              email: 
+                                  longpeo123@gmail.com
+                          sign_in_provider: "password"
+                      uid: "d2KV9v4hrjMWahiX9I3MS4AviD43"
+    
+
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"
+
+
+  /v1/user/password-reset:
+    post:
+      tags:
+        - v1
+        - user
+      summary: reset user password
+      description: reset user password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  description: old password
+                  type: string
+                newPassword:
+                  description: new password
+                  type: string
+              required:
+                - password
+                - newPassword                
+      responses: 
+        "200":
+          description: Change password succesful
+          content:
+            application/json:
+              schema:
+                type: string
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+                example:
+                  message: Success
+        "400":
+          $ref: "#/components/responses/BadRequestException"
+        "401":
+          $ref: "#/components/responses/UnauthorizedException"
+        "404":
+          $ref: "#/components/responses/NotFoundException"
+        default:
+          $ref: "#/components/responses/InternalServerErrorException"
+
